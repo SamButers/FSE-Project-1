@@ -12,6 +12,9 @@ CC_FLAGS = -Wall -c -I inc
 
 all: $(PROJECT_NAME)
 
+clean:
+	rm -rf obj/*.o *.bin
+
 $(PROJECT_NAME): $(OBJ)
 	$(CC) -o $@.bin $^
 
