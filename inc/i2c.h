@@ -3,12 +3,11 @@
 #include <stdint.h>
 #include "bme280.h"
 
-int setupBME280(struct bme280_dev *device);
-struct bme280_dev* initializeBME280(char *bus, uint8_t address, int *filestream);
-float getReferenceTemperature(struct bme280_dev *device);
+typedef struct Information {
+	float internalTemperature, potentiometerTemperature, environmentTemperature, referenceTemperature;
+} Information;
 
-typedef struct Identifier {
-	uint8_t address, filestream;
-} Identifier;
+float getEnvironmentTemperature();
+int displayLCDInformation(Information *info);
 
 #endif

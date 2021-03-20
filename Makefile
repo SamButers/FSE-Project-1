@@ -16,7 +16,7 @@ clean:
 	rm -rf obj/*.o *.bin
 
 $(PROJECT_NAME): $(OBJ)
-	$(CC) -o $@.bin $^
+	$(CC) -o $@.bin $^ -lncurses
 
 obj/%.o: src/%.c inc/%.h
 	$(CC) -o $@ $< $(CC_FLAGS)
