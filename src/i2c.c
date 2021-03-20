@@ -6,6 +6,9 @@
 #include <stdint.h>
 #include <termios.h>
 #include <string.h>
+#include <inttypes.h>
+#include <linux/i2c-dev.h>
+#include <sys/ioctl.h>
 #include "bme280.h"
 
 int8_t user_i2c_read(uint8_t reg_addr, uint8_t *data, uint32_t len, void *intf_ptr) {
@@ -63,27 +66,34 @@ int setupBME280(struct bme280_dev *device) {
 }
 
 struct bme280_dev* initializeBME280(char *bus, uint8_t address, int *filestream) {
-	Identifier id;
+	Identifier *id = malloc(sizeof(Identifier));
 	struct bme280_dev *device = malloc(sizeof(struct bme280_dev));
 	int8_t result = BME280_OK;
 	
-	if((id.filestream = open(bus, O_RDWR)) == -1) {
+	if((id->filestream = open(bus, O_RDWR)) < 0) {
 		printf("I2C bus error.\n");
 		return NULL;
 	}
 	
-	*filestream = id.filestream;
+	id->address = address;
 	
-	id.address = address;
+	if (ioctl(id->filestream, I2C_SLAVE, id->address) < 0) {
+		printf("Failed to acquire bus access and/or talk to slave.\n");
+		return NULL;
+	}
+	
+	*filestream = id->filestream;
+	
 	device->intf = BME280_I2C_INTF;
 	device->read = user_i2c_read;
 	device->write = user_i2c_write;
 	device->delay_us = user_delay_us;
-	device->intf_ptr = &id;
+	device->intf_ptr = id;
 	
 	result = bme280_init(device);
 	if(result != BME280_OK) {
 		printf("Device initialization error.\n");
+		printf("Error %" PRIi8 "\n", result);
 		return NULL;
 	}
 	
