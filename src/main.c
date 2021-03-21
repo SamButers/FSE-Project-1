@@ -45,10 +45,10 @@ void mainLoop(int uartFilestream, int bm280, int mode, float referenceValue) {
 		if(checkInput())
 			break;
 		
-		//info.internalTemperature = getInternalTemperature(uartFilestream);
-		//info.potentiometerTemperature = getPotentiometerTemperature(uartFilestream);
-		info.internalTemperature = 37.2;
-		info.potentiometerTemperature = 29.2;
+		info.internalTemperature = getInternalTemperature(uartFilestream);
+		info.potentiometerTemperature = getPotentiometerTemperature(uartFilestream);
+		//info.internalTemperature = 37.2;
+		//info.potentiometerTemperature = 29.2;
 		info.environmentTemperature = getEnvironmentTemperature();
 		
 		if(mode)
@@ -59,9 +59,9 @@ void mainLoop(int uartFilestream, int bm280, int mode, float referenceValue) {
 		
 		//controlTemperature(&info);
 		
-		//displayLCDInformation(&info);
+		displayLCDInformation(&info, mode);
 		displayInformation(&info);
-		sleep(1);
+		usleep(700000);
 	}
 }
 
@@ -80,6 +80,8 @@ int main() {
 		printf("BME280 device initialization error.\n");
 		return 0;
 	}
+	
+	lcdSetup();
 	
 	initscr();
 	

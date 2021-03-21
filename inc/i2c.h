@@ -8,6 +8,7 @@ typedef struct Information {
 } Information;
 
 float getEnvironmentTemperature();
-int displayLCDInformation(Information *info);
+void displayLCDInformation(Information *info, int mode);
+int lcdSetup();
 
 #endif

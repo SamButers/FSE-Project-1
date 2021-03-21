@@ -16,7 +16,7 @@ clean:
 	rm -rf obj/*.o *.bin
 
 $(PROJECT_NAME): $(OBJ)
-	$(CC) -o $@.bin $^ -lncurses
+	$(CC) -o $@.bin $^ -lncurses -lwiringPi
 
 obj/%.o: src/%.c inc/%.h
 	$(CC) -o $@ $< $(CC_FLAGS)

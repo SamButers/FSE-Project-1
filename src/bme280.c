@@ -194,3 +194,6 @@ int64_t var1_64, var2_64;
 	return 0;
 
 } /* bme280ReadValues() */
+int getI2CBus() {
+	return file_i2c;
+}

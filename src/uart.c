@@ -39,8 +39,6 @@ int UARTRead(int filestream, void *buffer, int length) {
 		printf("UART RX error.\n");
 		return -1;
 	}
-
-	printf("Bytes lidos: %d\n", rx_length);
 	
 	return rx_length;
 }
@@ -67,7 +65,7 @@ float getTemperature(int filestream, unsigned char subCode) {
 		return 1;
 	}
 	
-	sleep(1);
+	usleep(100000);
 	
 	unsigned char *readBuffer = malloc(9);
 	int bytesRead = UARTRead(filestream, (void*) readBuffer, 9);
