@@ -7,9 +7,19 @@
 #include "uart.h"
 #include "i2c.h"
 #include "bme280.h"
+#include "io.h"
+
+int uartFilestream;
 
 void gracefullyStop(int sig) {	
 	endwin();
+	
+	lcdClose();
+	bme280Close();
+	close(uartFilestream);
+	
+	turnOff(RESISTOR_PIN);
+	turnOff(FAN_PIN);
 	
 	exit(0);
 }
@@ -25,12 +35,13 @@ int checkInput() {
 	}
 }
 
-void displayInformation(Information *info) {
+void displayInformation(Information *info, float pid) {
 	clear();
 	
 	printw("Internal Temperature: %f\n", info->internalTemperature);
 	printw("Environment Temperature: %f\n", info->environmentTemperature);
 	printw("Reference Temperature: %f\n", info->referenceTemperature);
+	printw("PID: %f\n", pid);
 	printw("Press Enter to change reference temperature source.");
 	
 	refresh();
@@ -38,6 +49,7 @@ void displayInformation(Information *info) {
 
 void mainLoop(int uartFilestream, int bm280, int mode, float referenceValue) {
 	Information info;
+	float pid;
 	
 	noecho();
 	nodelay(stdscr, 1);
@@ -57,10 +69,10 @@ void mainLoop(int uartFilestream, int bm280, int mode, float referenceValue) {
 		else
 			info.referenceTemperature = info.potentiometerTemperature;
 		
-		//controlTemperature(&info);
+		pid = controlTemperature(&info);
 		
 		displayLCDInformation(&info, mode);
-		displayInformation(&info);
+		displayInformation(&info, pid);
 		usleep(700000);
 	}
 }
@@ -69,7 +81,6 @@ int main() {
 	float referenceValue;
 	int choice, mode;
 	
-	int uartFilestream;
 	if(UARTOpen(&uartFilestream)) {
 		printf("UART initialization error.\n");
 		return 0;
@@ -82,6 +93,8 @@ int main() {
 	}
 	
 	lcdSetup();
+	
+	IOStart();
 	
 	initscr();
 	

@@ -1,5 +1,5 @@
-#ifndef UART
-#define UART
+#ifndef UART_H_
+#define UART_H_
 
 int UARTOpen(int *filestream);
 int UARTRead(int filestream, void *buffer, int length);

@@ -30,8 +30,8 @@ void displayLCDInformation(Information *info, int mode) {
 	char *infoOne = (char*) malloc(23); //TI = xx.xx TE = xx.xx
 	char *infoTwo = (char*) malloc(12); //TE = xx.xx
 	
-	sprintf(infoOne, "TI: %.1f TE: %.1f", info->internalTemperature, info->environmentTemperature);
-	sprintf(infoTwo, "TR: %.1f", info->referenceTemperature);
+	sprintf(infoOne, "TI:%.1f TE:%.1f", info->internalTemperature, info->environmentTemperature);
+	sprintf(infoTwo, "TR:%.1f", info->referenceTemperature);
 	
 	ClrLcd();
 	
@@ -43,4 +43,8 @@ void displayLCDInformation(Information *info, int mode) {
 	
 	free(infoOne);
 	free(infoTwo);
+}
+
+void lcdClose() {
+	close(fd);
 }

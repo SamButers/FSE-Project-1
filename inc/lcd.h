@@ -1,3 +1,6 @@
+#ifndef LCD_H_
+#define LCD_H_
+
 /*
 *
 * by Lewis Loflin www.bristolwatch.com lewis@bvu.net
@@ -40,3 +43,5 @@ void lcdLoc(int line);
 void ClrLcd(void);
 void typeln(const char *s);
 void typeChar(char val);
+
+#endif
