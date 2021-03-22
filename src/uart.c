@@ -31,12 +31,10 @@ int UARTRead(int filestream, void *buffer, int length) {
 	rx_length = read(filestream, buffer, length);
 	
 	if(rx_length == 0) {
-		printf("No data available.\n");
 		return 0;
 	}
 	
 	else if(rx_length < 0) {
-		printf("UART RX error.\n");
 		return -1;
 	}
 	
@@ -61,7 +59,6 @@ float getTemperature(int filestream, unsigned char subCode) {
 	
 	int count = write(filestream, &msg_buffer, 9);
 	if(count < 0) {
-		printf("UART TX error.\n");
 		return 1;
 	}
 	
@@ -71,12 +68,10 @@ float getTemperature(int filestream, unsigned char subCode) {
 	int bytesRead = UARTRead(filestream, (void*) readBuffer, 9);
 
 	if(bytesRead == -1) {
-		printf("Read error.\n");
 		return -1;
 	}
 
 	if(verifyMessage(readBuffer, bytesRead)) {
-		printf("Invalid CRC.\n");
 		return -1;
 	}
 	

@@ -27,11 +27,10 @@ extern float previousError;
 extern Status status;
 
 float calculatePID(float referenceValue, float value);
-void turnOn(int pin);
 void turnOff(int pin);
 void applyPWM(int pin, float pid);
 float controlTemperature(Information *info);
-void IOStart();
+int IOStart();
 void IOClose();
 
 #endif

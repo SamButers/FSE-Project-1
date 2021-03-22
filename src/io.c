@@ -41,12 +41,6 @@ void applyPWM(int pin, float pid) {
 
 void turnOff(int pin) {
 	applyPWM(pin, 0);
-	//digitalWrite(pin, PIN_OFF);
-}
-
-void turnOn(int pin) {
-	//digitalWrite(pin, PIN_ON);
-	return;
 }
 
 float controlTemperature(Information *info) {
@@ -54,7 +48,6 @@ float controlTemperature(Information *info) {
 	
 	if(pid > 0) {
 		if(status.resistor == 0) {
-			turnOn(RESISTOR_PIN);
 			turnOff(FAN_PIN);
 		}
 		
@@ -64,7 +57,6 @@ float controlTemperature(Information *info) {
 	
 	else if(pid <= -40) {
 		if(status.fan == 0) {
-			turnOn(FAN_PIN);
 			turnOff(RESISTOR_PIN);
 		}
 		
@@ -80,12 +72,15 @@ float controlTemperature(Information *info) {
 	}
 }
 
-void IOStart() {
-	wiringPiSetup();
+int IOStart() {
+	if(wiringPiSetup() == -1)
+		return 1;
 	
 	pinMode(RESISTOR_PIN, OUTPUT);
 	pinMode(FAN_PIN, OUTPUT);
 	
 	softPwmCreate(RESISTOR_PIN, 1, 100);
 	softPwmCreate(FAN_PIN, 1, 100);
+	
+	return 0;
 }

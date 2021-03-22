@@ -98,7 +98,7 @@ void mainLoop(int uartFilestream, int bm280, int mode, float referenceValue) {
 
 int main() {
 	float referenceValue;
-	int choice, mode;
+	int choice, mode, tries;
 	
 	if(UARTOpen(&uartFilestream)) {
 		printf("UART initialization error.\n");
@@ -111,10 +111,40 @@ int main() {
 		return 0;
 	}
 	
-	lcdSetup();
-	IOStart();
+	tries = 0;
+	while(lcdSetup()) {
+		if(tries >= 3) {
+			printf("Failed to initialize LCD after 3 tries, aborting...\n");
+			return 0;
+		}
+		
+		printf("Failed to initialize LCD, trying again...\n");
+		tries++;
+	}
+	
+	tries = 0;
+	while(IOStart()) {
+		if(tries >= 3) {
+			printf("Failed to initialize IO after 3 tries, aborting...\n");
+			return 0;
+		}
+		
+		printf("Failed to initialize IO, trying again...\n");
+		tries++;
+	}
+	
+	tries = 0;
+	while(startCSV()) {
+		if(tries >= 3) {
+			printf("Failed to initialize CSV file after 3 tries, aborting...\n");
+			return 0;
+		}
+		
+		printf("Failed to initialize CSV file, trying again...\n");
+		tries++;
+	}
+	
 	initscr();
-	startCSV();
 	
 	signal(SIGINT, gracefullyStop);
 	signal(SIGALRM, skipSignal);

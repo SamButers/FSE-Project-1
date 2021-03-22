@@ -28,8 +28,8 @@ void writeCSV(Information *info, float pid) {
 	if(pid > 0)
 		fprintf(csvFile, "%.2f,%.2f\n", 0.00, pid);
 		
-	else if(pid <= 40)
-		fprintf(csvFile, "%.2f,%.2f\n", pid, 0.00);
+	else if(pid < 0)
+		fprintf(csvFile, "%.2f,%.2f\n", (-1.0) * pid, 0.00);
 	
 	else
 		fprintf(csvFile, "%.2f,%.2f\n", 0.00, 0.00);
