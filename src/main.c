@@ -9,6 +9,7 @@
 #include "bme280.h"
 #include "io.h"
 #include "utils.h"
+#include "csv.h"
 
 int uartFilestream;
 
@@ -26,6 +27,10 @@ void gracefullyStop(int sig) {
 	exit(0);
 }
 
+void skipSignal(int sig) {
+	signal(SIGALRM, skipSignal);
+}
+
 int checkInput() {
 	int input = getch();
 	
@@ -37,13 +42,12 @@ int checkInput() {
 	}
 }
 
-void displayInformation(Information *info, float pid) {
+void displayInformation(Information *info) {
 	clear();
 	
 	printw("Internal Temperature: %f\n", info->internalTemperature);
 	printw("Environment Temperature: %f\n", info->environmentTemperature);
 	printw("Reference Temperature: %f\n", info->referenceTemperature);
-	printw("PID: %f\n", pid);
 	printw("Press Enter to change reference temperature source.");
 	
 	refresh();
@@ -53,17 +57,20 @@ void mainLoop(int uartFilestream, int bm280, int mode, float referenceValue) {
 	Information info;
 	float pid;
 	int fileControl = 0;
+	sigset_t sigSet;
+	struct timespec waitTimeout = {0, 700000000};
+	sigaddset(&sigSet, SIGALRM);
 	
 	noecho();
 	nodelay(stdscr, 1);
 	while(1) {
+		alarm(1);
+		
 		if(checkInput())
 			break;
 		
 		info.internalTemperature = getInternalTemperature(uartFilestream);
 		info.potentiometerTemperature = getPotentiometerTemperature(uartFilestream);
-		//info.internalTemperature = 37.2;
-		//info.potentiometerTemperature = 29.2;
 		info.environmentTemperature = getEnvironmentTemperature();
 		
 		if(mode)
@@ -83,8 +90,9 @@ void mainLoop(int uartFilestream, int bm280, int mode, float referenceValue) {
 			fileControl = 1;
 		
 		displayLCDInformation(&info, mode);
-		displayInformation(&info, pid);
-		usleep(700000);
+		displayInformation(&info);
+		
+		sigtimedwait(&sigSet, NULL, &waitTimeout);
 	}
 }
 
@@ -109,6 +117,7 @@ int main() {
 	startCSV();
 	
 	signal(SIGINT, gracefullyStop);
+	signal(SIGALRM, skipSignal);
 	
 	while(1) {
 		clear();
