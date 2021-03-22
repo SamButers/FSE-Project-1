@@ -8,6 +8,7 @@
 #include "i2c.h"
 #include "bme280.h"
 #include "io.h"
+#include "utils.h"
 
 int uartFilestream;
 
@@ -17,6 +18,7 @@ void gracefullyStop(int sig) {
 	lcdClose();
 	bme280Close();
 	close(uartFilestream);
+	closeCSV();
 	
 	turnOff(RESISTOR_PIN);
 	turnOff(FAN_PIN);
@@ -50,6 +52,7 @@ void displayInformation(Information *info, float pid) {
 void mainLoop(int uartFilestream, int bm280, int mode, float referenceValue) {
 	Information info;
 	float pid;
+	int fileControl = 0;
 	
 	noecho();
 	nodelay(stdscr, 1);
@@ -70,6 +73,14 @@ void mainLoop(int uartFilestream, int bm280, int mode, float referenceValue) {
 			info.referenceTemperature = info.potentiometerTemperature;
 		
 		pid = controlTemperature(&info);
+		
+		if(fileControl) {
+			writeCSV(&info, pid);
+			fileControl = 0;
+		}
+		
+		else
+			fileControl = 1;
 		
 		displayLCDInformation(&info, mode);
 		displayInformation(&info, pid);
@@ -93,10 +104,9 @@ int main() {
 	}
 	
 	lcdSetup();
-	
 	IOStart();
-	
 	initscr();
+	startCSV();
 	
 	signal(SIGINT, gracefullyStop);
 	

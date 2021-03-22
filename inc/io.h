@@ -1,7 +1,7 @@
 #ifndef IO_H_
 #define IO_H_
 
-#include "i2c.h"
+#include "utils.h"
 
 #define RESISTOR_PIN 4
 #define FAN_PIN 5
