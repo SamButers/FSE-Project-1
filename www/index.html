@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<title>Data visualizer</title>
+		<meta charset="UTF-8">
+		<script src="./src/apexcharts.js"></script>
+		<script src="./src/main.js"></script>
+		<link rel="stylesheet" href="css-reset.css">
+		<link rel="stylesheet" href="stylesheet.css">
+	</head>
+	
+	<body>
+		<div class="input-div">
+			<h1>CSV data</h1>
+			<textarea id="data" name="data"></textarea>
+			<button onclick="generateGraphs()">Generate charts</button>
+		</div>
+		
+		<div class="charts">
+			<div id="chartOne"></div>
+			<div id="chartTwo"></div>
+		</div>
+	</body>
+</html>
