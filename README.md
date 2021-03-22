@@ -40,7 +40,7 @@ Segue abaixo gráficos correspondendo a execução do loop principal por aproxim
 No diretório /www, foi codificada uma ferramenta para auxiliar a geração dos gráficos. <br>
 
 Para executá-la, suba um servidor http local a partir do diretório /www e acesse-o em algum navegador. <br>
-Um exemplo utilizando http.server segue com a execução do seguinte comando:
+Um exemplo utilizando o módulo http.server do Python segue com a execução do seguinte comando:
 > python -m http.server 8080
 
 Em seguida, acesse localhost:8080. <br>
