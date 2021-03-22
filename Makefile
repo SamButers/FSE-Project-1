@@ -8,7 +8,7 @@ OBJ=$(subst .c,.o,$(subst src,obj,$(C_SRC)))
 
 CC=gcc
 
-CC_FLAGS = -Wall -c -I inc
+CC_FLAGS = -Wall -c -O2 -static -I inc
 
 all: $(PROJECT_NAME)
 

@@ -69,8 +69,12 @@ void mainLoop(int uartFilestream, int bm280, int mode, float referenceValue) {
 		if(checkInput())
 			break;
 		
-		info.internalTemperature = getInternalTemperature(uartFilestream);
-		info.potentiometerTemperature = getPotentiometerTemperature(uartFilestream);
+		while((info.internalTemperature = getInternalTemperature(uartFilestream)) == -1)
+			usleep(100000);
+		
+		while((info.potentiometerTemperature = getPotentiometerTemperature(uartFilestream)) == -1)
+			usleep(100000);
+		
 		info.environmentTemperature = getEnvironmentTemperature();
 		
 		if(mode)
