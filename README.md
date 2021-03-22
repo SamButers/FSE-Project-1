@@ -44,5 +44,3 @@ Um exemplo utilizando o módulo http.server do Python segue com a execução do 
 > python -m http.server 8080
 
 Em seguida, acesse localhost:8080. <br>
-
-Ao inserir os dados do csv, retire a última quebra de linha.

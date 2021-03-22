@@ -1,6 +1,10 @@
 function generateGraphs() {
 	let data = document.getElementById('data').value;
-	let lines = data.split('\n');
+	let lines = data.split('\n').filter((line) => {
+		if(line == '' || /^\s+$/.test(line))
+			return false;
+		return true;
+	});
 	lines.shift();
 
 	let info = {
